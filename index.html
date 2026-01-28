@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Zakys Store Payment</title>
+
+<style>
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:url("https://images.unsplash.com/photo-1446776811953-b23d57bd21aa") no-repeat center center fixed;
+background-size:cover;
+display:flex;
+justify-content:center;
+align-items:flex-start;
+min-height:100vh;
+padding:10px;
+}
+
+/* CARD */
+.card{
+width:100%;
+max-width:420px;
+background:rgba(8,12,20,0.95);
+border-radius:16px;
+padding:15px;
+color:white;
+box-shadow:0 0 30px rgba(0,0,0,.9);
+overflow:hidden;
+}
+
+/* HEADER */
+.header{
+text-align:center;
+}
+
+.header img{
+width:85px;
+height:85px;
+border-radius:50%;
+border:2px solid #38bdf8;
+box-shadow:0 0 15px #38bdf8;
+}
+
+.header h2{
+margin:10px 0 5px;
+}
+
+/* TESTI */
+.testi{
+background:#2563eb;
+padding:10px;
+border-radius:10px;
+text-align:center;
+margin:12px 0;
+}
+
+.testi a{
+color:white;
+font-weight:bold;
+text-decoration:none;
+}
+
+/* INPUT */
+input,select{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+margin-top:10px;
+font-size:14px;
+}
+
+/* BUTTON */
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+margin-top:12px;
+background:#22c55e;
+color:white;
+font-weight:bold;
+font-size:15px;
+}
+
+/* TEXT */
+.section-title{
+margin-top:15px;
+font-weight:bold;
+}
+
+.copy{
+color:#38bdf8;
+font-weight:bold;
+cursor:pointer;
+}
+
+/* QRIS */
+.qris-box{
+margin-top:10px;
+text-align:center;
+}
+
+.qris-box img{
+width:100%;
+max-width:320px;
+height:auto;
+border-radius:12px;
+border:2px solid #2563eb;
+cursor:pointer;
+}
+
+/* PREVIEW */
+.preview{
+width:100%;
+margin-top:10px;
+border-radius:10px;
+display:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<div class="header">
+<img src="https://files.catbox.moe/0d71uz.jpg">
+<h2>Marz Store</h2>
+<p>APK & Jasa Digital Terpercaya</p>
+</div>
+
+<div class="testi">
+<a href="https://whatsapp.com/channel/0029Vb7OBnzIN9isZx8Og80J" target="_blank">
+Lihat Testimoni Marz Store 
+</a>
+</div>
+
+<input id="nama" placeholder="Nama Pembeli">
+<input id="wa" placeholder="No WhatsApp">
+
+<select id="produk">
+<option value="">-- Pilih Produk --</option>
+<option>Apk Qris Tanpa KTP - 2.000</option>
+<option>Web Nokos - 2.000</option>
+<option>Jaslog Random - 1.000</option>
+<option>Apk JB - 2.000</option>
+<option>Murlog - 2.000</option>
+<option>Jaslog Req - 2.000</option>
+<option>Apk Suntik All Sosmed - 3.000</option>
+<option>Apk Bioskop - 2.000</option>
+</select>
+
+<div class="section-title">Transfer Manual</div>
+
+<p>DANA :
+<span class="copy" onclick="copyText('0881037796340')">
+0881037796340 (Tap Copy)
+</span></p>
+
+<p>GOPAY :
+<span class="copy" onclick="copyText('0881037796340')">
+0881037796340 (Tap Copy)
+</span></p>
+
+<div class="section-title">QRIS (Tap QR Untuk Download)</div>
+
+<div class="qris-box">
+<img id="qrisImg" src="https://files.catbox.moe/s53zgj.jpg" onclick="downloadQRIS()">
+</div>
+
+<div class="section-title">Upload Bukti Transfer</div>
+
+<input type="file" id="bukti" onchange="previewImage()">
+<img id="preview" class="preview">
+
+<button onclick="kirimWA()">Konfirmasi & Kirim WhatsApp</button>
+
+</div>
+
+<audio id="notifSound">
+<source src="https://assets.mixkit.co/sfx/preview/mixkit-confirmation-tone-2867.mp3">
+</audio>
+
+<script>
+
+function playSound(){
+document.getElementById("notifSound").play();
+}
+
+/* COPY */
+function copyText(text){
+navigator.clipboard.writeText(text);
+playSound();
+alert("Nomor berhasil dicopy!");
+}
+
+/* PREVIEW */
+function previewImage(){
+let file=document.getElementById("bukti").files[0];
+let preview=document.getElementById("preview");
+
+if(file){
+preview.src=URL.createObjectURL(file);
+preview.style.display="block";
+playSound();
+}
+}
+
+/* WA SEND */
+function kirimWA(){
+
+let nama=document.getElementById("nama").value;
+let wa=document.getElementById("wa").value;
+let produk=document.getElementById("produk").value;
+
+if(nama=="" || wa=="" || produk==""){
+alert("Lengkapi data dulu!");
+return;
+}
+
+playSound();
+
+let admin="62881037796340";
+
+let pesan=`Halo Admin Zakys Store%0A
+Nama: ${nama}%0A
+WA: ${wa}%0A
+Produk: ${produk}%0A
+Saya sudah transfer`;
+
+window.open("https://wa.me/"+admin+"?text="+pesan,"_blank");
+}
+
+/* QRIS DOWNLOAD */
+function downloadQRIS(){
+
+playSound();
+
+fetch(document.getElementById("qrisImg").src)
+.then(res => res.blob())
+.then(blob => {
+
+let url = window.URL.createObjectURL(blob);
+let a = document.createElement("a");
+
+a.href = url;
+a.download = "QRIS_MarzStore.png";
+document.body.appendChild(a);
+a.click();
+
+document.body.removeChild(a);
+window.URL.revokeObjectURL(url);
+
+});
+}
+
+</script>
+
+</body>
+  </html>
